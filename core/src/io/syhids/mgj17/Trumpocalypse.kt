@@ -14,9 +14,9 @@ class Trumpocalypse : ApplicationAdapter() {
     lateinit var trump: Trump
 
     @JvmField
-    val WORLD_WIDTH = 600
+    val WORLD_WIDTH = 1300
     @JvmField
-    val WORLD_HEIGHT = WORLD_WIDTH * 12 / 10
+    val WORLD_HEIGHT = WORLD_WIDTH * 6 / 10
 
     var GAME_SPEED = 1f
 
