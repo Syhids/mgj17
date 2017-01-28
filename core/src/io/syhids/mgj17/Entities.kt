@@ -18,6 +18,9 @@ val Entity.movement: MovableComponent
 val Entity.animation: AnimationComponent
     get() = getComponent(AnimationComponent::class.java)
 
+val Entity.wigMovement: WigMovementComponent
+    get() = getComponent(WigMovementComponent::class.java)
+
 val TRUMP_ANIMATION = Animation(
         Frame("t1.png", 1000),
         Frame("t2.png", 100),
@@ -75,7 +78,7 @@ class TrumpRelative : Entity() {
 
 class Wig: Entity() {
     init {
-        add(WigComponent())
+        add(WigMovementComponent())
         add(VelocityComponent())
         add(PositionComponent(y = 100f))
         add(SpriteComponent(scale = 0.2f, visible = false, img = Texture("badlogic.jpg")))

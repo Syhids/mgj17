@@ -1,6 +1,7 @@
 package io.syhids.mgj17
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 
@@ -11,6 +12,10 @@ class PositionComponent(
     fun set(x: Float, y: Float) {
         this.x = x
         this.y = y
+    }
+
+    fun set(position: PositionComponent){
+        set(position.x, position.y)
     }
 }
 
@@ -32,7 +37,15 @@ class TrumpRelativeComponent : Component {
     var timeLeftToShoot: Float = 1f + Math.random().toFloat()
 }
 
-class WigComponent : Component {
+class WigMovementComponent : Component {
+    lateinit var parent : Entity
+    var state: WigState = WigState.Invisible
+
+    sealed class WigState {
+        object Invisible : WigState()
+        object InTrumpsHands : WigState()
+        object Falling : WigState()
+    }
 }
 
 class SpriteComponent(

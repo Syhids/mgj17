@@ -31,7 +31,7 @@ class Trumpocalypse : ApplicationAdapter() {
     lateinit var camera: OrthographicCamera
     lateinit var font: BitmapFont
 
-    var GAME_SPEED = 4f
+    var GAME_SPEED = 2f
 
     override fun create() {
         font = generateFont()
@@ -46,16 +46,17 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(mexican)
         engine.addEntity(trump)
 
-//        val relative1 = TrumpRelative()
-//        relative1.position.x = (-WORLD_WIDTH/2 + relative1.sprite.width).toFloat()
-//        val relative2 = TrumpRelative()
-//        relative2.position.x = (WORLD_WIDTH/2 - relative2.sprite.width).toFloat()
-//
-//        engine.addEntity(relative1)
-//        engine.addEntity(relative2)
+        val relative1 = TrumpRelative()
+        relative1.position.x = (-WORLD_WIDTH/2 + relative1.sprite.width).toFloat()
+        val relative2 = TrumpRelative()
+        relative2.position.x = (WORLD_WIDTH/2 - relative2.sprite.width).toFloat()
+
+        engine.addEntity(relative1)
+        engine.addEntity(relative2)
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())
+        engine.addSystem(WigMovementSystem())
         engine.addSystem(TrumpRelativeShootingSystem())
         engine.addSystem(MovementSystem())
         engine.addSystem(AccelerationSystem())
@@ -88,7 +89,6 @@ class Trumpocalypse : ApplicationAdapter() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         engine.update(dt)
-        System.out.println("END")
 
         batch.begin()
         font.draw(batch,

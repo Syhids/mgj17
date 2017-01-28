@@ -1,12 +1,11 @@
 package io.syhids.mgj17
 
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import io.syhids.mgj17.WigMovementComponent.WigState
 import java.util.*
 
 class TrumpMovementSystem : IteratingSystem(Family.all(
@@ -90,7 +89,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
 
         trumpAnim.reset()
         trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
-        engine.addSystem(WigSystem(entity))
+        val wig = Wig()
+        wig.wigMovement.parent = entity
+        wig.position.set(entity.position)
+        engine.addEntity(wig)
     }
 }
 
@@ -132,34 +134,17 @@ class SpriteDrawingSystem(
     }
 }
 
-class WigSystem(private val entity: Entity) : EntitySystem() {
-    val wig = Wig()
-
-    var state: WigState = WigState.Invisible
-
-    sealed class WigState {
-        object Invisible : WigState()
-        object InTrumpsHands : WigState()
-        object Falling : WigState()
-    }
-
-    override fun addedToEngine(engine: Engine) {
-        wig.position.set(entity.position.x, entity.position.y)
-        engine.addEntity(wig)
-    }
-
-    override fun update(deltaTime: Float) {
-        val curState = state
-
-        when (curState) {
-            WigState.Invisible -> System.out.print("0")
-            WigState.InTrumpsHands -> System.out.print("1")
-            WigState.Falling -> System.out.print("2")
-        }
+class WigMovementSystem : IteratingSystem(Family.all(
+        WigMovementComponent::class.java
+).get()) {
+    override fun processEntity(entity: Entity, deltaTime: Float) {
+        val wig = entity as Wig
+        val parent = wig.wigMovement.parent
+        val curState = wig.wigMovement.state
 
         when (curState) {
             WigState.Invisible -> {
-                state = if (entity is Trump) {
+                wig.wigMovement.state = if (parent is Trump) {
                     WigState.InTrumpsHands
                 } else {
                     WigState.Falling
@@ -168,7 +153,7 @@ class WigSystem(private val entity: Entity) : EntitySystem() {
                 wig.sprite.visible = false
             }
             WigState.InTrumpsHands -> {
-                val frameIndex = entity.animation.currentAnimationIndex
+                val frameIndex = parent.animation.currentAnimationIndex
 
                 wig.sprite.visible = frameIndex != 0
 
@@ -178,30 +163,30 @@ class WigSystem(private val entity: Entity) : EntitySystem() {
                     else -> 1f
                 }
 
-                applyPositionOfFrame(frameIndex)
+                applyPositionOfFrame(wig, frameIndex)
 
-                if (entity.animation.currentAnimationIndex >= entity.animation.animation.lastFrameIndex - 1) {
-                    state = WigState.Falling
+                if (parent.animation.currentAnimationIndex >= parent.animation.animation.lastFrameIndex - 1) {
+                    wig.wigMovement.state = WigState.Falling
                     wig.sprite.visible = true
                     wig.sprite.alpha = 1f
-                    applyPositionOfFrame(entity.animation.animation.lastFrameIndex - 1)
+                    applyPositionOfFrame(wig, parent.animation.animation.lastFrameIndex - 1)
                 }
             }
             WigState.Falling -> {
                 wig.sprite.visible = true
                 wig.sprite.alpha = 1f
-                wig.velocity.y = -440f
+                wig.velocity.y = -260f
 
-                if (wig.position.y < -WORLD_HEIGHT/2) {
+                if (wig.position.y < -WORLD_HEIGHT / 2) {
                     engine.removeEntity(wig)
-                    engine.removeSystem(this)
                 }
             }
         }
     }
 
-    private fun applyPositionOfFrame(frameIndex: Int) {
-        wig.position.set(x = entity.position.x, y = entity.position.y)
+    private fun applyPositionOfFrame(wig: Wig, frameIndex: Int) {
+        val parent = wig.wigMovement.parent
+        wig.position.set(x = parent.position.x, y = parent.position.y)
 
         val yDelta = arrayOf(0f, 0f, 0f, 150f, 200f, 190f, 150f, 0f, -30f, -30f)
 
@@ -221,7 +206,10 @@ class TrumpRelativeShootingSystem : IteratingSystem(Family.all(
         if (trumpRelative.timeLeftToShoot <= 0f) {
             trumpRelative.timeLeftToShoot = (1 + Math.random() * 2).toFloat()
 
-            engine.addSystem(WigSystem(entity))
+            val wig = Wig()
+            wig.wigMovement.parent = entity
+            wig.position.set(entity.position)
+            engine.addEntity(wig)
         }
     }
 }
