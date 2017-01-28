@@ -6,9 +6,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
@@ -21,7 +19,7 @@ import io.syhids.mgj17.system.MovementSystem
 @JvmField
 val WORLD_WIDTH = 1280
 @JvmField
-val WORLD_HEIGHT = WORLD_WIDTH * 6 / 10
+val WORLD_HEIGHT: Int = (WORLD_WIDTH * 6 / 10).toInt()
 
 class Trumpocalypse : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -55,6 +53,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(relative2)
 
         engine.addEntity(Wall())
+        engine.addEntity(Background())
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())
@@ -64,8 +63,6 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(AccelerationSystem())
         engine.addSystem(AnimationSystem())
         engine.addSystem(SpriteDrawingSystem(batch, camera))
-
-        sprite = Sprite(Texture("badlogic.jpg"))
     }
 
     private fun generateFont(): BitmapFont {
@@ -83,7 +80,6 @@ class Trumpocalypse : ApplicationAdapter() {
 
     private var time: Float = 0f
 
-    lateinit var sprite: Sprite
     override fun render() {
         val dt = Gdx.graphics.deltaTime * GAME_SPEED
 

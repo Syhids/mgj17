@@ -82,7 +82,7 @@ class Wig : Entity() {
         add(WigMovementComponent())
         add(VelocityComponent())
         add(PositionComponent(y = 0f))
-        add(SpriteComponent(scale = 0.3f, visible = false, img = Texture("badlogic.jpg")))
+        add(SpriteComponent(scale = 0.15f, visible = false, img = Texture("peluca.png")))
     }
 }
 
@@ -95,5 +95,13 @@ class Wall : Entity() {
         val texture = Texture("Muro.png")
         add(PositionComponent(y = yAlignBottom(texture)))
         add(SpriteComponent(img = texture, depth = -1))
+    }
+}
+
+class Background : Entity() {
+    init {
+        val texture = Texture("background.png")
+        add(PositionComponent(y = yAlignBottom(texture) + 50f))
+        add(SpriteComponent(img = texture, depth = -2))
     }
 }
