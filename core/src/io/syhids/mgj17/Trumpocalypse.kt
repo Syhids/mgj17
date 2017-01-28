@@ -14,9 +14,9 @@ class Trumpocalypse : ApplicationAdapter() {
     lateinit var trump: Trump
 
     @JvmField
-    val WORLD_WIDTH = 1024
+    val WORLD_WIDTH = 600
     @JvmField
-    val WORLD_HEIGHT = WORLD_WIDTH * 10 / 19
+    val WORLD_HEIGHT = WORLD_WIDTH * 12 / 10
 
     override fun create() {
         batch = SpriteBatch()
@@ -30,6 +30,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(trump)
 
         engine.addSystem(InputSystem())
+        engine.addSystem(TrumpShootSystem())
         engine.addSystem(MovementSystem())
         engine.addSystem(AccelerationSystem())
         engine.addSystem(AnimationSystem())

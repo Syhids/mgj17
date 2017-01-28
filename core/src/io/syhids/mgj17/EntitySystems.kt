@@ -3,6 +3,7 @@ package io.syhids.mgj17
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -65,6 +66,19 @@ class AnimationSystem : IteratingSystem(Family.all(
         animation.step(deltaTime)
 
         sprite.img = animation.getCurrentAnimation()
+    }
+}
+
+class TrumpShootSystem : IteratingSystem(Family.all(
+        TrumpComponent::class.java
+).get()) {
+    override fun processEntity(entity: Entity, deltaTime: Float) {
+        val animation = entity.animation
+
+        if (Gdx.input.isKeyJustPressed(Keys.UP)) {
+            animation.reset()
+            animation.state = AnimationComponent.State.PlayUntilFrame(0)
+        }
     }
 }
 

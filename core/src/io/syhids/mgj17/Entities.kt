@@ -43,10 +43,12 @@ class Mexican : Entity() {
 
 class Trump : Entity() {
     init {
+        add(TrumpComponent())
         add(VelocityComponent())
         add(PositionComponent(y = 100f))
         add(SpriteComponent(scale = 0.33f))
-        add(MovableComponent())
-        add(AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.5f))
+        val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.5f)
+        animationComponent.state = AnimationComponent.State.Paused
+        add(animationComponent)
     }
 }
