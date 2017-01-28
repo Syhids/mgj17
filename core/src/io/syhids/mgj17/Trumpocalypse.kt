@@ -19,7 +19,7 @@ import io.syhids.mgj17.system.InputSystem
 import io.syhids.mgj17.system.MovementSystem
 
 @JvmField
-val WORLD_WIDTH = 1300
+val WORLD_WIDTH = 1280
 @JvmField
 val WORLD_HEIGHT = WORLD_WIDTH * 6 / 10
 
@@ -53,6 +53,8 @@ class Trumpocalypse : ApplicationAdapter() {
 
         engine.addEntity(relative1)
         engine.addEntity(relative2)
+
+        engine.addEntity(Wall())
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())

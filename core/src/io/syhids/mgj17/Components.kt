@@ -51,7 +51,8 @@ class WigMovementComponent : Component {
 class SpriteComponent(
         var img: Texture? = null,
         var scale: Float = 1f,
-        var visible: Boolean = true
+        var visible: Boolean = true,
+        var depth: Int = 0
 ) : Component {
     val sprite: Sprite
         get() = Sprite(img)

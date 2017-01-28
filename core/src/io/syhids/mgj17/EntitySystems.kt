@@ -3,6 +3,7 @@ package io.syhids.mgj17
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import io.syhids.mgj17.WigMovementComponent.WigState
@@ -99,10 +100,12 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
 class SpriteDrawingSystem(
         private val batch: SpriteBatch,
         private val camera: OrthographicCamera
-) : IteratingSystem(Family.all(
+) : SortedIteratingSystem(Family.all(
         PositionComponent::class.java,
         SpriteComponent::class.java
-).get()) {
+).get(), { e, e2 ->
+    e.sprite.depth - e2.sprite.depth
+}) {
 
     private val position = component(PositionComponent::class)
     private val sprite = component(SpriteComponent::class)
@@ -142,12 +145,16 @@ class WigMovementSystem : IteratingSystem(Family.all(
         val parent = wig.wigMovement.parent
         val curState = wig.wigMovement.state
 
+        val INITIAL_VELOCITY = 100f
+        val VELOCITY_INCREMENT = 500f
+
         when (curState) {
             WigState.Invisible -> {
-                wig.wigMovement.state = if (parent is Trump) {
-                    WigState.InTrumpsHands
+                if (parent is Trump) {
+                    wig.wigMovement.state = WigState.InTrumpsHands
                 } else {
-                    WigState.Falling
+                    wig.wigMovement.state = WigState.Falling
+                    wig.velocity.y = -INITIAL_VELOCITY
                 }
 
                 wig.sprite.visible = false
@@ -167,6 +174,8 @@ class WigMovementSystem : IteratingSystem(Family.all(
 
                 if (parent.animation.currentAnimationIndex >= parent.animation.animation.lastFrameIndex - 1) {
                     wig.wigMovement.state = WigState.Falling
+                    wig.velocity.y = -INITIAL_VELOCITY
+
                     wig.sprite.visible = true
                     wig.sprite.alpha = 1f
                     applyPositionOfFrame(wig, parent.animation.animation.lastFrameIndex - 1)
@@ -175,7 +184,7 @@ class WigMovementSystem : IteratingSystem(Family.all(
             WigState.Falling -> {
                 wig.sprite.visible = true
                 wig.sprite.alpha = 1f
-                wig.velocity.y = -260f
+                wig.velocity.y -= deltaTime * VELOCITY_INCREMENT
 
                 if (wig.position.y < -WORLD_HEIGHT / 2) {
                     engine.removeEntity(wig)

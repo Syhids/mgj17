@@ -44,7 +44,8 @@ val MEXICAN_ANIMATION = Animation(
 class Mexican : Entity() {
     init {
         add(VelocityComponent())
-        add(PositionComponent(y = -300f))
+//        add(PositionComponent(y = yAlignBottom(MEXICAN_ANIMATION.frames[0].texture, scale = 0.3f)))
+        add(PositionComponent(y = -294f))
         add(MexicanComponent())
         add(SpriteComponent(scale = 0.3f))
         add(MovableComponent())
@@ -56,8 +57,8 @@ class Trump : Entity() {
     init {
         add(TrumpComponent())
         add(VelocityComponent())
-        add(PositionComponent(y = 200f))
-        add(SpriteComponent(scale = 0.26f))
+        add(PositionComponent(y = 192f))
+        add(SpriteComponent(scale = 0.28f))
         val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.5f)
         animationComponent.state = AnimationComponent.State.Paused
         add(animationComponent)
@@ -68,7 +69,7 @@ class TrumpRelative : Entity() {
     init {
         add(TrumpRelativeComponent())
         add(VelocityComponent())
-        add(PositionComponent(y = 200f))
+        add(PositionComponent(y = 160f))
         add(SpriteComponent(scale = 0.14f, img = TRUMP_ANIMATION.frames[0].texture))
         val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.2f)
         animationComponent.state = AnimationComponent.State.Paused
@@ -76,11 +77,23 @@ class TrumpRelative : Entity() {
     }
 }
 
-class Wig: Entity() {
+class Wig : Entity() {
     init {
         add(WigMovementComponent())
         add(VelocityComponent())
-        add(PositionComponent(y = 100f))
-        add(SpriteComponent(scale = 0.2f, visible = false, img = Texture("badlogic.jpg")))
+        add(PositionComponent(y = 0f))
+        add(SpriteComponent(scale = 0.3f, visible = false, img = Texture("badlogic.jpg")))
+    }
+}
+
+fun yAlignBottom(tex: Texture, scale: Float = 1f): Float {
+    return -(WORLD_HEIGHT / 2 - tex.height*scale / 2)
+}
+
+class Wall : Entity() {
+    init {
+        val texture = Texture("Muro.png")
+        add(PositionComponent(y = yAlignBottom(texture)))
+        add(SpriteComponent(img = texture, depth = -1))
     }
 }
