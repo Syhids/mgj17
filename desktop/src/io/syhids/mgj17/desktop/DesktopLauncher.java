@@ -6,7 +6,12 @@ import io.syhids.mgj17.Trumpocalypse;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
+		Trumpocalypse game = new Trumpocalypse();
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new Trumpocalypse(), config);
+		float MULT = 2.4f;
+		config.width = (int)(game.WORLD_WIDTH*MULT);
+		config.height = (int)(game.WORLD_HEIGHT*MULT);
+		config.fullscreen = false;
+		new LwjglApplication(game, config);
 	}
 }
