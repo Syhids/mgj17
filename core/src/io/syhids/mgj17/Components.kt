@@ -28,6 +28,10 @@ class MexicanComponent : Component {
 class TrumpComponent : Component {
 }
 
+class TrumpRelativeComponent : Component {
+    var timeLeftToShoot: Float = 1f + Math.random().toFloat()
+}
+
 class WigComponent : Component {
 }
 

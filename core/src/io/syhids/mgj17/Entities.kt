@@ -34,7 +34,7 @@ val TRUMP_ANIMATION = Animation(
 class Mexican : Entity() {
     init {
         add(VelocityComponent())
-        add(PositionComponent(y = -450f))
+        add(PositionComponent(y = -300f))
         add(MexicanComponent())
         add(SpriteComponent(scale = 0.14f))
         add(MovableComponent())
@@ -46,9 +46,21 @@ class Trump : Entity() {
     init {
         add(TrumpComponent())
         add(VelocityComponent())
-        add(PositionComponent(y = 100f))
+        add(PositionComponent(y = 200f))
         add(SpriteComponent(scale = 0.2f))
         val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.5f)
+        animationComponent.state = AnimationComponent.State.Paused
+        add(animationComponent)
+    }
+}
+
+class TrumpRelative : Entity() {
+    init {
+        add(TrumpRelativeComponent())
+        add(VelocityComponent())
+        add(PositionComponent(y = 200f))
+        add(SpriteComponent(scale = 0.14f, img = TRUMP_ANIMATION.frames[0].texture))
+        val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.2f)
         animationComponent.state = AnimationComponent.State.Paused
         add(animationComponent)
     }
