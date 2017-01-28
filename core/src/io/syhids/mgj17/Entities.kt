@@ -101,7 +101,7 @@ class Wall : Entity() {
 class Background : Entity() {
     init {
         val texture = Texture("background.png")
-        add(PositionComponent(y = yAlignBottom(texture) + 50f))
+        add(PositionComponent(y = yAlignBottom(texture) + 115f))
         add(SpriteComponent(img = texture, depth = -2))
     }
 }
