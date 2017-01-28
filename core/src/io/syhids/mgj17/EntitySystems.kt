@@ -150,6 +150,13 @@ class WigSystem(private val entity: Entity) : EntitySystem() {
 
     override fun update(deltaTime: Float) {
         val curState = state
+
+        when (curState) {
+            WigState.Invisible -> System.out.print("0")
+            WigState.InTrumpsHands -> System.out.print("1")
+            WigState.Falling -> System.out.print("2")
+        }
+
         when (curState) {
             WigState.Invisible -> {
                 state = if (entity is Trump) {
@@ -184,6 +191,11 @@ class WigSystem(private val entity: Entity) : EntitySystem() {
                 wig.sprite.visible = true
                 wig.sprite.alpha = 1f
                 wig.velocity.y = -440f
+
+                if (wig.position.y < -WORLD_HEIGHT/2) {
+                    engine.removeEntity(wig)
+                    engine.removeSystem(this)
+                }
             }
         }
     }

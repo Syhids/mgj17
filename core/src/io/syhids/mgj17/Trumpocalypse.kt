@@ -3,11 +3,16 @@ package io.syhids.mgj17
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
+import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.system.AccelerationSystem
 import io.syhids.mgj17.system.AnimationSystem
 import io.syhids.mgj17.system.InputSystem
@@ -24,10 +29,13 @@ class Trumpocalypse : ApplicationAdapter() {
     lateinit var mexican: Mexican
     lateinit var trump: Trump
     lateinit var camera: OrthographicCamera
+    lateinit var font: BitmapFont
 
-    var GAME_SPEED = 2f
+    var GAME_SPEED = 4f
 
     override fun create() {
+        font = generateFont()
+
         batch = SpriteBatch()
 
         mexican = Mexican()
@@ -57,13 +65,43 @@ class Trumpocalypse : ApplicationAdapter() {
         sprite = Sprite(Texture("badlogic.jpg"))
     }
 
+    private fun generateFont(): BitmapFont {
+        val generator = FreeTypeFontGenerator(Gdx.files.internal("ALIN_KID.ttf"))
+        val parameter = FreeTypeFontParameter()
+        parameter.size = 56
+        parameter.color = Color.WHITE
+        parameter.borderColor = Color.BLACK
+        parameter.borderWidth = 3f
+        val font = generator.generateFont(parameter)
+        generator.dispose()
+
+        return font
+    }
+
+    private var time: Float = 0f
 
     lateinit var sprite: Sprite
     override fun render() {
+        val dt = Gdx.graphics.deltaTime * GAME_SPEED
+
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        engine.update(Gdx.graphics.deltaTime * GAME_SPEED)
+        engine.update(dt)
+        System.out.println("END")
+
+        batch.begin()
+        font.draw(batch,
+                "${time.toInt()}",
+                (WORLD_WIDTH/2).toFloat() - 8f,
+                (WORLD_HEIGHT/2).toFloat() - 8f,
+                0f, //Target width
+                Align.topRight,
+                false
+        )
+        batch.end()
+
+        time += Gdx.graphics.deltaTime
     }
 
     override fun dispose() {
