@@ -81,15 +81,7 @@ class TrumpShootSystem : IteratingSystem(Family.all(
         if (Gdx.input.isKeyJustPressed(Keys.UP)) {
             trumpAnim.reset()
             trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
-
-//            val wigSystem = engine.getSystem(WigSystem::class.java)
-//            if (wigSystem == null) {
-                engine.addSystem(WigSystem())
-//            } else {
-//                engine.removeSystem(wigSystem)
-//                engine.addSystem(WigSystem())
-//            }
-
+            engine.addSystem(WigSystem())
         }
     }
 }
@@ -105,7 +97,7 @@ class SpriteDrawingSystem(
     private val position = component(PositionComponent::class)
     private val sprite = component(SpriteComponent::class)
 
-    private val TRANSLATION_X = -350f
+    private val TRANSLATION_X = -380f
     private val TRANSLATION_Y = -240f
 
     override fun update(deltaTime: Float) {
@@ -193,11 +185,10 @@ class WigSystem : EntitySystem() {
     }
 
     private fun applyPositionOfFrame(frameIndex: Int) {
-        wig.position.set(x = trump.position.x + 250f, y = trump.position.y + 270f)
-        wig.position.y -= 100f
+        wig.position.set(x = trump.position.x + trump.sprite.midWidth + 200f, y = trump.position.y + 240f)
 
         val yDelta = arrayOf(0f, 0f, 0f, 150f, 200f, 190f, 150f, 0f, -30f, -30f)
 
-        wig.position.y += yDelta[frameIndex]
+        wig.position.y += yDelta[frameIndex] * 0.7f
     }
 }

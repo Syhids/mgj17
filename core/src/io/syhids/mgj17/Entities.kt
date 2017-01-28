@@ -34,7 +34,7 @@ val TRUMP_ANIMATION = Animation(
 class Mexican : Entity() {
     init {
         add(VelocityComponent())
-        add(PositionComponent(y = -220f))
+        add(PositionComponent(y = -450f))
         add(MexicanComponent())
         add(SpriteComponent(scale = 0.14f))
         add(MovableComponent())
@@ -47,7 +47,7 @@ class Trump : Entity() {
         add(TrumpComponent())
         add(VelocityComponent())
         add(PositionComponent(y = 100f))
-        add(SpriteComponent(scale = 0.33f))
+        add(SpriteComponent(scale = 0.2f))
         val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.5f)
         animationComponent.state = AnimationComponent.State.Paused
         add(animationComponent)
@@ -59,6 +59,6 @@ class Wig: Entity() {
         add(WigComponent())
         add(VelocityComponent())
         add(PositionComponent(y = 100f))
-        add(SpriteComponent(scale = 0.33f, visible = false, img = Texture("badlogic.jpg")))
+        add(SpriteComponent(scale = 0.2f, visible = false, img = Texture("badlogic.jpg")))
     }
 }
