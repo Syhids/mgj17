@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import java.util.*
 
 class InputSystem : IteratingSystem(Family.all(
         MexicanComponent::class.java
@@ -83,6 +84,83 @@ class TrumpShootSystem : IteratingSystem(Family.all(
             trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
             engine.addSystem(WigSystem())
         }
+    }
+}
+
+class TrumpMovementSystem : IteratingSystem(Family.all(
+        TrumpComponent::class.java
+).get()) {
+    var state: State = State.IdlingFor(ms = 2000)
+
+    sealed class State {
+        class MovingTo(val x: Float) : State()
+        class IdlingFor(val ms: Int, var mustShootAtStart: Boolean = true) : State() {
+            var idledTime: Float = 0f
+
+            val seconds: Float
+                get() = ms / 1000f
+
+            val idledEnough: Boolean
+                get() = idledTime >= seconds
+        }
+    }
+
+    override fun processEntity(entity: Entity, deltaTime: Float) {
+        val trumpAnim = entity.animation
+
+        val curState = state
+        when (curState) {
+            is State.MovingTo -> {
+                val moveStep = deltaTime * 300f
+                if (entity.position.x < curState.x) {
+                    entity.velocity.x += moveStep
+                } else {
+                    entity.velocity.x -= moveStep
+                }
+
+                if (Math.abs(Math.abs(entity.position.x) - Math.abs(curState.x)) < 10) {
+                    state = State.IdlingFor(ms = 1200 + Random().nextInt(1800))
+                }
+            }
+            is State.IdlingFor -> {
+                if (curState.mustShootAtStart) {
+                    curState.mustShootAtStart = false
+
+                    shootWig(entity)
+                }
+
+                curState.idledTime += deltaTime
+
+                if (curState.idledEnough) {
+                    val finalTargetPosX = findRandomXInsideWorld(entity)
+                    state = State.MovingTo(finalTargetPosX)
+                }
+
+                entity.velocity.x *= 0.9f
+            }
+        }
+    }
+
+    private fun findRandomXInsideWorld(entity: Entity): Float {
+        var finalTargetPosX: Float
+
+        val leftBounds = -WORLD_WIDTH/3 + 0
+        val rightBounds = WORLD_WIDTH/3 - 0
+
+        do {
+            val delta = (Math.random() * 800 - 400).toInt()
+            finalTargetPosX = entity.position.x + delta
+        } while (finalTargetPosX < leftBounds || finalTargetPosX > rightBounds)
+
+        return finalTargetPosX
+    }
+
+    private fun shootWig(entity: Entity) {
+        val trumpAnim = entity.animation
+
+        trumpAnim.reset()
+        trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
+        engine.addSystem(WigSystem())
     }
 }
 

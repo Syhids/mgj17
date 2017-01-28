@@ -7,18 +7,18 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
+@JvmField
+val WORLD_WIDTH = 1300
+@JvmField
+val WORLD_HEIGHT = WORLD_WIDTH * 6 / 10
+
 class Trumpocalypse : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
     val engine = Engine()
     lateinit var mexican: Mexican
     lateinit var trump: Trump
 
-    @JvmField
-    val WORLD_WIDTH = 1300
-    @JvmField
-    val WORLD_HEIGHT = WORLD_WIDTH * 6 / 10
-
-    var GAME_SPEED = 1f
+    var GAME_SPEED = 2f
 
     override fun create() {
         batch = SpriteBatch()
@@ -34,6 +34,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(wig)
 
         engine.addSystem(InputSystem())
+        engine.addSystem(TrumpMovementSystem())
         engine.addSystem(TrumpShootSystem())
         engine.addSystem(MovementSystem())
         engine.addSystem(AccelerationSystem())
