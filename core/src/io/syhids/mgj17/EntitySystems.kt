@@ -90,6 +90,8 @@ class TrumpShootSystem : IteratingSystem(Family.all(
 class TrumpMovementSystem : IteratingSystem(Family.all(
         TrumpComponent::class.java
 ).get()) {
+    var accDelta : Float = 1f
+
     var state: State = State.IdlingFor(ms = 2000)
 
     sealed class State {
@@ -106,12 +108,13 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val trumpAnim = entity.animation
+        accDelta += deltaTime
 
         val curState = state
         when (curState) {
             is State.MovingTo -> {
-                val moveStep = deltaTime * 300f
+                val moveStep = deltaTime * 1f + Math.min(accDelta*0.2f, 25f)
+
                 if (entity.position.x < curState.x) {
                     entity.velocity.x += moveStep
                 } else {
@@ -119,7 +122,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                 }
 
                 if (Math.abs(Math.abs(entity.position.x) - Math.abs(curState.x)) < 10) {
-                    state = State.IdlingFor(ms = 1200 + Random().nextInt(1800))
+                    val fixed = 2500 - Math.min(1200f, accDelta * 200f)
+                    val variable = Random().nextInt(4400 - Math.min(4399f, accDelta * 400f).toInt())
+
+                    state = State.IdlingFor(ms = (fixed + variable).toInt())
                 }
             }
             is State.IdlingFor -> {
@@ -136,7 +142,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                     state = State.MovingTo(finalTargetPosX)
                 }
 
-                entity.velocity.x *= 0.9f
+                entity.velocity.x *= 0.88f
             }
         }
     }
