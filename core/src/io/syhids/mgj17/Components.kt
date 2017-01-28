@@ -2,11 +2,16 @@ package io.syhids.mgj17
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
 
 class PositionComponent(
         var x: Float = 0f,
         var y: Float = 0f
 ) : Component {
+    fun set(x: Float, y: Float) {
+        this.x = x
+        this.y = y
+    }
 }
 
 class VelocityComponent : Component {
@@ -23,10 +28,16 @@ class MexicanComponent : Component {
 class TrumpComponent : Component {
 }
 
+class WigComponent : Component {
+}
+
 class SpriteComponent(
         var img: Texture? = null,
-        var scale: Float = 1f
+        var scale: Float = 1f,
+        var visible: Boolean = true
 ) : Component {
+    val sprite: Sprite
+        get() = Sprite(img)
 
     val midWidth: Int
         get() = width / 2
@@ -37,6 +48,8 @@ class SpriteComponent(
         get() = img?.let { it.width * scale }?.toInt() ?: 0
     val height: Int
         get() = img?.let { it.height * scale }?.toInt() ?: 0
+
+    var alpha: Float = 1f
 }
 
 class AnimationComponent(
@@ -47,10 +60,16 @@ class AnimationComponent(
     var state: State = State.Playing()
         set(value) {
             field = value
-            if (value is State.PlayUntilFrame && getCurrentAnimationIndex() == value.frameIndex) {
+            if (value is State.PlayUntilFrame && currentAnimationIndex == value.frameIndex) {
                 value.loopUntilNextFrame = true
             }
         }
+
+    val isLastFrame: Boolean
+        get() = animation.lastFrameIndex == currentAnimationIndex
+
+    val isFirstFrame: Boolean
+        get() = currentAnimationIndex == 0
 
     sealed class State {
         class Playing(val times: Int = -1) : State() {
@@ -65,7 +84,9 @@ class AnimationComponent(
 
     private var accDelta: Float = 0f
 
-    fun getCurrentAnimation(): Texture {
+    var currentAnimationIndex: Int = 0
+
+    fun updateCurrentAnimation() {
         var deltaMs = accDelta * 1000 * speed
 
         while (deltaMs > animation.totalDuration) {
@@ -76,6 +97,8 @@ class AnimationComponent(
             deltaMs -= frame.duration
 
             if (deltaMs <= 0) {
+                currentAnimationIndex = frameIndex
+
                 val curState = state
                 if (curState is State.PlayUntilFrame) {
                     if (frameIndex == curState.frameIndex && !curState.loopUntilNextFrame) {
@@ -88,29 +111,15 @@ class AnimationComponent(
                     }
                 }
 
-                return frame.texture
+                return
             }
         }
 
         throw RuntimeException("Should not happen")
     }
 
-    private fun getCurrentAnimationIndex(): Int {
-        var deltaMs = accDelta * 1000 * speed
-
-        while (deltaMs > animation.totalDuration) {
-            deltaMs -= animation.totalDuration
-        }
-
-        animation.frames.forEachIndexed { frameIndex, frame ->
-            deltaMs -= frame.duration
-
-            if (deltaMs <= 0) {
-                return frameIndex
-            }
-        }
-
-        throw RuntimeException("Should not happen")
+    fun getCurrentAnimation(): Texture {
+        return animation.frames[currentAnimationIndex].texture
     }
 
     fun step(deltaTime: Float) {

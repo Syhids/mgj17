@@ -1,6 +1,7 @@
 package io.syhids.mgj17
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.graphics.Texture
 
 val Entity.position: PositionComponent
     get() = getComponent(PositionComponent::class.java)
@@ -50,5 +51,14 @@ class Trump : Entity() {
         val animationComponent = AnimationComponent(animation = TRUMP_ANIMATION, speed = 1.5f)
         animationComponent.state = AnimationComponent.State.Paused
         add(animationComponent)
+    }
+}
+
+class Wig: Entity() {
+    init {
+        add(WigComponent())
+        add(VelocityComponent())
+        add(PositionComponent(y = 100f))
+        add(SpriteComponent(scale = 0.33f, visible = false, img = Texture("badlogic.jpg")))
     }
 }
