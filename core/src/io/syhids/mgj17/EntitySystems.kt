@@ -105,7 +105,6 @@ class SpriteDrawingSystem(
     private val position = component(PositionComponent::class)
     private val sprite = component(SpriteComponent::class)
 
-
     override fun update(deltaTime: Float) {
         camera.update()
 
@@ -183,6 +182,7 @@ class WigSystem(private val entity: Entity) : EntitySystem() {
             }
             WigState.Falling -> {
                 wig.sprite.visible = true
+                wig.sprite.alpha = 1f
                 wig.velocity.y = -440f
             }
         }

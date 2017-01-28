@@ -32,20 +32,19 @@ class Trumpocalypse : ApplicationAdapter() {
 
         mexican = Mexican()
         trump = Trump()
-        val wig = Wig()
 
         camera = OrthographicCamera(WORLD_WIDTH.toFloat(), WORLD_HEIGHT.toFloat())
 
-        val relative1 = TrumpRelative()
-        relative1.position.x = (-WORLD_WIDTH/2 + relative1.sprite.width).toFloat()
-        val relative2 = TrumpRelative()
-        relative2.position.x = (WORLD_WIDTH/2 - relative2.sprite.width).toFloat()
-
         engine.addEntity(mexican)
         engine.addEntity(trump)
-        engine.addEntity(relative1)
-        engine.addEntity(relative2)
-        engine.addEntity(wig)
+
+//        val relative1 = TrumpRelative()
+//        relative1.position.x = (-WORLD_WIDTH/2 + relative1.sprite.width).toFloat()
+//        val relative2 = TrumpRelative()
+//        relative2.position.x = (WORLD_WIDTH/2 - relative2.sprite.width).toFloat()
+//
+//        engine.addEntity(relative1)
+//        engine.addEntity(relative2)
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())
