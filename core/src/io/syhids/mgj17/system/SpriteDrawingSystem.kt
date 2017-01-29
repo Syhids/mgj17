@@ -45,6 +45,7 @@ class SpriteDrawingSystem(
         spriteToDraw.setAlpha(sprite.alpha)
         spriteToDraw.setScale(sprite.scale)
         spriteToDraw.setCenter(position.x, position.y)
+        spriteToDraw.rotation = sprite.rotation
 
         spriteToDraw.draw(batch)
     }

@@ -68,6 +68,7 @@ class SpriteComponent(
         get() = img?.let { it.height * scale }?.toInt() ?: 0
 
     var alpha: Float = 1f
+    var rotation: Float = 0f
 }
 
 class AnimationComponent(

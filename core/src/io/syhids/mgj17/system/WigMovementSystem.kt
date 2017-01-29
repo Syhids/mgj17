@@ -50,6 +50,8 @@ class WigMovementSystem : IteratingSystem(Family.all(
                 }
             }
             WigMovementComponent.WigState.Falling -> {
+                wig.sprite.rotation += deltaTime*180
+
                 wig.sprite.visible = true
                 wig.sprite.alpha = 1f
                 wig.velocity.y -= deltaTime * VELOCITY_INCREMENT
