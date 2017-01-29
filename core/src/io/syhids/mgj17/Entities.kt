@@ -124,17 +124,18 @@ class DeportedSheet : Entity() {
         add(SpriteComponent(img = Texture("Muerte.png"), scale = 0.5f, visible = false, depth = 10))
     }
 
-    val playButtonArea = Rectangle(1040f, 962f, 320f, 300f)
-    val exitButtonArea = Rectangle(1402f, 962f, 320f, 300f)
+    private val BUTTON_WIDTH = 140f
+    private val BUTTON_HEIGHT = 68f
+
+    val playButtonArea = Rectangle(-154f, -189f, BUTTON_WIDTH, BUTTON_HEIGHT)
+    val exitButtonArea = Rectangle(23f, -189f, BUTTON_WIDTH, BUTTON_HEIGHT)
 
     fun isPlayButtonClicked(clickPos: Vector2): Boolean {
-//        return true
-        return playButtonArea.contains(clickPos.add(position.x, position.y))
+        return playButtonArea.contains(clickPos)
     }
 
     fun isExitButtonClicked(clickPos: Vector2): Boolean {
-//        return false
-        return exitButtonArea.contains(clickPos.add(position.x, position.y))
+        return exitButtonArea.contains(clickPos)
     }
 }
 
@@ -149,10 +150,10 @@ class Menu : Entity(){
     val exitButtonArea = Rectangle(-575f, -323f, 370f, 140f)
 
     fun isPlayButtonClicked(clickPos: Vector2): Boolean {
-        return playButtonArea.contains(clickPos.add(position.x, position.y))
+        return playButtonArea.contains(clickPos)
     }
 
     fun isExitButtonClicked(clickPos: Vector2): Boolean {
-        return exitButtonArea.contains(clickPos.add(position.x, position.y))
+        return exitButtonArea.contains(clickPos)
     }
 }
