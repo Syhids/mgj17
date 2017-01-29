@@ -47,7 +47,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
             State.Countdown -> {
                 val countdown = Math.max((4 - realAccDelta).toInt(), 0)
                 batch.begin()
-                font.draw(batch, "$countdown", 0f, 0f, 0f, Align.center, false)
+                font.draw(batch, "$countdown", 0f, 100f, 0f, Align.center, false)
                 batch.end()
 
                 if (realAccDelta > 3f) {
