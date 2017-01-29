@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
-import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.system.*
 
 @JvmField
@@ -66,6 +65,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(SpriteDrawingSystem(batch, camera))
         engine.addSystem(GameStateSystem(batch, font, deportedSheet))
         engine.addSystem(TrumpPhrasesSystem())
+        engine.addSystem(TimeDrawingSystem(font, batch))
     }
 
     private fun generateFont(): BitmapFont {
@@ -90,17 +90,6 @@ class Trumpocalypse : ApplicationAdapter() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         engine.update(dt)
-
-        batch.begin()
-        font.draw(batch,
-                "${time.toInt()}",
-                (WORLD_WIDTH / 2).toFloat() - 8f,
-                (WORLD_HEIGHT / 2).toFloat() - 8f,
-                0f, //Target width
-                Align.topRight,
-                false
-        )
-        batch.end()
 
         time += Gdx.graphics.deltaTime
     }
