@@ -38,7 +38,7 @@ class CannonShootSystem : IteratingSystem(Family.all(
                 if (curState.timeLeft <= 0f) {
 
                     val wig = Wig()
-                    wig.wigMovement.parent = entity
+                    wig.throwable.parent = entity
                     wig.position.set(entity.position)
                     wig.position.y -= 90f
                     engine.addEntity(wig)

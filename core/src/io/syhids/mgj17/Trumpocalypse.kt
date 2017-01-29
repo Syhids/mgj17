@@ -59,14 +59,14 @@ class Trumpocalypse : ApplicationAdapter() {
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())
-        engine.addSystem(WigMovementSystem())
+        engine.addSystem(ThrowableMovementSystem())
         engine.addSystem(CannonShootSystem())
         engine.addSystem(MovementSystem())
         engine.addSystem(AccelerationSystem())
         engine.addSystem(AnimationSystem())
-        engine.addSystem(WigMexicanCollisionSystem())
+        engine.addSystem(MexicanCollisionSystem())
         engine.addSystem(SpriteDrawingSystem(batch, camera))
-        engine.addSystem(GameStateSystem(batch, bigFont, deportedSheet, camera))
+        engine.addSystem(GameStateSystem(batch, font, bigFont, deportedSheet, camera))
         engine.addSystem(TrumpPhrasesSystem())
         engine.addSystem(TimeDrawingSystem(font, batch))
     }

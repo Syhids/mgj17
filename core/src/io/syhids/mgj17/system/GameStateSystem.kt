@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.*
 
-class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deportedSheet: DeportedSheet, val camera: OrthographicCamera) : EntitySystem(1) {
+class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val bigFont: BitmapFont, val deportedSheet: DeportedSheet, val camera: OrthographicCamera) : EntitySystem(1) {
     sealed class State {
         object None : State()
         object Menu : State()
@@ -26,6 +26,8 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
 
     var accDelta: Float = 0f
     var realAccDelta: Float = 0f
+
+    var money: Int = 0
 
     override fun addedToEngine(engine: Engine?) {
         accDelta = 0f
@@ -46,11 +48,12 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
 
         when (state) {
             State.Playing -> {
+                drawMoney()
             }
             State.Countdown -> {
                 val countdown = Math.max((4 - realAccDelta).toInt(), 0)
                 batch.begin()
-                font.draw(batch, "$countdown", 0f, 100f, 0f, Align.center, false)
+                bigFont.draw(batch, "$countdown", 0f, 100f, 0f, Align.center, false)
                 batch.end()
 
                 if (realAccDelta > 3f) {
@@ -58,6 +61,8 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                 }
             }
             State.Lost -> {
+                drawMoney()
+
                 if (Gdx.input.justTouched()) {
                     val clickPos = clickPositionInGameCoords()
                     log("Click at $clickPos")
@@ -86,6 +91,12 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                 }
             }
         }
+    }
+
+    private fun drawMoney() {
+        batch.begin()
+        font.draw(batch, "${money * 100}", -WORLD_WIDTH / 2 + 8f, WORLD_HEIGHT / 2 - 8f, 0f, Align.topLeft, false)
+        batch.end()
     }
 
     private fun clickPositionInGameCoords(): Vector2 {
@@ -130,7 +141,8 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
     }
 
     private fun resetPlayingEntitiesState() {
-        engine.getEntitiesFor(Family.all(WigMovementComponent::class.java).get()).forEach {
+        money = 0
+        engine.getEntitiesFor(Family.all(ThrowableComponent::class.java).get()).forEach {
             engine.removeEntity(it)
         }
 

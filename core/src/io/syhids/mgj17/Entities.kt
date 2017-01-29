@@ -20,8 +20,8 @@ val Entity.movement: MovableComponent
 val Entity.animation: AnimationComponent
     get() = getComponent(AnimationComponent::class.java)
 
-val Entity.wigMovement: WigMovementComponent
-    get() = getComponent(WigMovementComponent::class.java)
+val Entity.throwable: ThrowableComponent
+    get() = getComponent(ThrowableComponent::class.java)
 
 val Entity.collider: ColliderComponent
     get() = getComponent(ColliderComponent::class.java)
@@ -97,7 +97,20 @@ class Wig : Entity() {
         val tex = Texture("peluca.png")
         val scale = 0.15f
 
-        add(WigMovementComponent())
+        add(ThrowableComponent())
+        add(VelocityComponent())
+        add(ColliderComponent(width = tex.width*scale, height = tex.height*scale))
+        add(PositionComponent(y = 0f))
+        add(SpriteComponent(scale = scale, visible = false, img = tex))
+    }
+}
+
+class Money: Entity() {
+    init {
+        val tex = Texture("fajo.png")
+        val scale = 0.15f
+
+        add(ThrowableComponent())
         add(VelocityComponent())
         add(ColliderComponent(width = tex.width*scale, height = tex.height*scale))
         add(PositionComponent(y = 0f))

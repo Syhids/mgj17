@@ -43,7 +43,7 @@ class CannonComponent : Component {
     }
 }
 
-class WigMovementComponent : Component {
+class ThrowableComponent : Component {
     lateinit var parent: Entity
     var state: WigState = WigState.Invisible
 

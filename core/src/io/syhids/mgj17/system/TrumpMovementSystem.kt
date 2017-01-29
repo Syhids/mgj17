@@ -33,10 +33,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
 
-        when(gameState.state) {
-            is GameStateSystem.State.Countdown ->{
-            entity.velocity.x *= 0.86f
-            return
+        when (gameState.state) {
+            is GameStateSystem.State.Countdown -> {
+                entity.velocity.x *= 0.86f
+                return
             }
             is GameStateSystem.State.Menu -> {
                 return
@@ -48,7 +48,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
         val curState = state
         when (curState) {
             is State.MovingTo -> {
-                val moveStep = deltaTime * 1f + Math.min(difficuty * 0.2f, 25f)
+                val moveStep = deltaTime * 1f + Math.min(difficuty * 0.3f, 60f)
 
                 if (entity.position.x < curState.x) {
                     entity.velocity.x += moveStep
@@ -57,8 +57,8 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                 }
 
                 if (Math.abs(Math.abs(entity.position.x) - Math.abs(curState.x)) < 10) {
-                    val fixed = 2500 - Math.min(1200f, difficuty * 200f)
-                    val variable = Random().nextInt(4400 - Math.min(4399f, difficuty * 400f).toInt())
+                    val fixed = 2200 - Math.min(1200f, difficuty * 200f)
+                    val variable = Random().nextInt(5000 - Math.min(4999f, difficuty * 450f).toInt())
 
                     state = State.IdlingFor(ms = (fixed + variable).toInt())
                 }
@@ -67,7 +67,11 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                 if (curState.mustShootAtStart) {
                     curState.mustShootAtStart = false
 
-                    shootWig(entity)
+                    if (Math.random() > 0.15f) {
+                        shootWig(entity)
+                    } else {
+                        shootMoney(entity)
+                    }
                 }
 
                 curState.idledTime += deltaTime
@@ -112,8 +116,19 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
         trumpAnim.reset()
         trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
         val wig = Wig()
-        wig.wigMovement.parent = entity
+        wig.throwable.parent = entity
         wig.position.set(entity.position)
         engine.addEntity(wig)
+    }
+
+    private fun shootMoney(entity: Entity) {
+        val trumpAnim = entity.animation
+
+        trumpAnim.reset()
+        trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
+        val money = Money()
+        money.throwable.parent = entity
+        money.position.set(entity.position)
+        engine.addEntity(money)
     }
 }

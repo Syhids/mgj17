@@ -4,12 +4,9 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.Rectangle
-import io.syhids.mgj17.MexicanComponent
-import io.syhids.mgj17.WigMovementComponent
-import io.syhids.mgj17.collider
-import io.syhids.mgj17.position
+import io.syhids.mgj17.*
 
-class WigMexicanCollisionSystem : IteratingSystem(Family.all(
+class MexicanCollisionSystem : IteratingSystem(Family.all(
         MexicanComponent::class.java
 ).get()) {
 
@@ -24,13 +21,19 @@ class WigMexicanCollisionSystem : IteratingSystem(Family.all(
         val mexicanRect = rectangleFrom(entity)
 
         engine.getEntitiesFor(Family.all(
-                WigMovementComponent::class.java
-        ).get()).forEach { wig ->
-            val wigRect = rectangleFrom(wig)
+                ThrowableComponent::class.java
+        ).get()).forEach { affectedEntity ->
+            val rect = rectangleFrom(affectedEntity)
 
-            if (wigRect.overlaps(mexicanRect)) {
+            if (rect.overlaps(mexicanRect)) {
                 val gameStateSystem = engine.getSystem(GameStateSystem::class.java)
-                gameStateSystem.state = GameStateSystem.State.Lost
+                if (affectedEntity is Wig) {
+                    engine.removeEntity(affectedEntity)
+                    gameStateSystem.state = GameStateSystem.State.Lost
+                } else {
+                    engine.removeEntity(affectedEntity)
+                    gameStateSystem.money++
+                }
             }
         }
     }
