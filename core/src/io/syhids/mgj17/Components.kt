@@ -189,3 +189,7 @@ class ColliderComponent(
     val midHeight: Float
         get() = height / 2
 }
+
+class MenuComponent : Component {
+
+}

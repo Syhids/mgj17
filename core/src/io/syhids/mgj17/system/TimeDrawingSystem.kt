@@ -16,6 +16,7 @@ class TimeDrawingSystem(val font: BitmapFont, val batch: SpriteBatch) : EntitySy
         when (gameState.state) {
             GameStateSystem.State.Playing -> timeSeconds = gameState.realAccDelta.toInt()
             GameStateSystem.State.Countdown -> timeSeconds = 0
+            GameStateSystem.State.Menu -> return
         }
 
         batch.begin()

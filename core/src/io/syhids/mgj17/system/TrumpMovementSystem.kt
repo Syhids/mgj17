@@ -32,9 +32,15 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        if (gameState.state is GameStateSystem.State.Countdown) {
+
+        when(gameState.state) {
+            is GameStateSystem.State.Countdown ->{
             entity.velocity.x *= 0.86f
             return
+            }
+            is GameStateSystem.State.Menu -> {
+                return
+            }
         }
 
         accDelta += deltaTime

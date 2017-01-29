@@ -120,7 +120,7 @@ class Background : Entity() {
 
 class DeportedSheet : Entity() {
     init {
-        add(PositionComponent())
+        add(PositionComponent(x = -50f))
         add(SpriteComponent(img = Texture("Muerte.png"), scale = 0.5f, visible = false, depth = 10))
     }
 
@@ -128,10 +128,28 @@ class DeportedSheet : Entity() {
     val exitButtonArea = Rectangle(1402f, 962f, 320f, 300f)
 
     fun isPlayButtonClicked(clickPos: Vector2): Boolean {
+//        return true
         return playButtonArea.contains(clickPos.add(position.x, position.y))
     }
 
     fun isExitButtonClicked(clickPos: Vector2): Boolean {
+//        return false
         return exitButtonArea.contains(clickPos.add(position.x, position.y))
+    }
+}
+
+class Menu : Entity(){
+    init {
+        add(MenuComponent())
+        add(PositionComponent())
+        add(SpriteComponent(img = Texture("titulo.png"), scale = 1f, visible = false, depth = 1000))
+    }
+
+    fun isPlayButtonClicked(clickPos: Vector2): Boolean {
+        return true
+    }
+
+    fun isExitButtonClicked(clickPos: Vector2): Boolean {
+        return false
     }
 }

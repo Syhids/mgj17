@@ -3,12 +3,11 @@ package io.syhids.mgj17.system
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.SortedIteratingSystem
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import io.syhids.mgj17.PositionComponent
-import io.syhids.mgj17.SpriteComponent
-import io.syhids.mgj17.component
-import io.syhids.mgj17.sprite
+import io.syhids.mgj17.*
 
 class SpriteDrawingSystem(
         private val batch: SpriteBatch,
@@ -38,6 +37,12 @@ class SpriteDrawingSystem(
 
         if (!sprite.visible || sprite.img == null)
             return
+
+        //XXX: Hacky
+        if (entity is Menu) {
+            Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        }
 
         val position = position.get(entity)
         val spriteToDraw = sprite.sprite

@@ -55,6 +55,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(Background())
         val deportedSheet = DeportedSheet()
         engine.addEntity(deportedSheet)
+        engine.addEntity(Menu())
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())

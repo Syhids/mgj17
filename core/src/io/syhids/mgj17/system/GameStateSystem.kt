@@ -13,13 +13,14 @@ import io.syhids.mgj17.*
 class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deportedSheet: DeportedSheet) : EntitySystem(1) {
     sealed class State {
         object None : State()
+        object Menu : State()
         object Countdown : State()
         object Playing : State()
         object Lost : State()
     }
 
     var previousState: State = State.None
-    var state: State = State.Countdown
+    var state: State = State.Menu
 
     var accDelta: Float = 0f
     var realAccDelta: Float = 0f
@@ -72,15 +73,41 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                     }
                 }
             }
+            State.Menu -> {
+                if (Gdx.input.justTouched()) {
+                    val clickPos = Vector2(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
+                    log("Click at $clickPos")
+
+                    if (menu.isPlayButtonClicked(clickPos)) {
+                        Sounds.buttonSound.playMe()
+                        state = State.Countdown
+                    } else if (menu.isExitButtonClicked(clickPos)) {
+                        Sounds.buttonSound.playMe()
+                        //Fuck the exit button :(
+//                        thread(isDaemon = true) {
+//                            Thread.sleep(2000)
+                            Gdx.app.exit()
+//                        }.start()
+                    }
+                }
+            }
         }
     }
+
+    val menu by lazy { engine.getEntitiesFor(Family.all(MenuComponent::class.java).get()).first() as Menu }
 
     private fun onStateTransitioned(previousState: State, newState: State) {
         accDelta = 0f
         realAccDelta = 0f
 
         when (newState) {
+            State.Menu-> {
+                Sounds.musicMenu.playMe()
+                menu.sprite.visible = true
+            }
             State.Countdown -> {
+                Sounds.musicMenu.stop()
+                menu.sprite.visible = false
                 resetPlayingEntitiesState()
             }
             State.Playing -> {
