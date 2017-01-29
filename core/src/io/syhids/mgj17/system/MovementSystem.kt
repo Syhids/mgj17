@@ -3,10 +3,7 @@ package io.syhids.mgj17.system
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
-import io.syhids.mgj17.MovableComponent
-import io.syhids.mgj17.VelocityComponent
-import io.syhids.mgj17.movement
-import io.syhids.mgj17.velocity
+import io.syhids.mgj17.*
 
 class MovementSystem : IteratingSystem(Family.all(
         VelocityComponent::class.java,
@@ -27,5 +24,14 @@ class MovementSystem : IteratingSystem(Family.all(
 
         entity.velocity.x = Math.min(maxVelocity, entity.velocity.x)
         entity.velocity.x = Math.max(-maxVelocity, entity.velocity.x)
+
+        if (entity is Mexican) {
+            //Do not cross the border... of the screen
+            if (entity.position.x < -WORLD_WIDTH/2 + 100f && entity.velocity.x < 0f) {
+                entity.velocity.x = 1f
+            }else if (entity.position.x > WORLD_WIDTH/2 - 100f && entity.velocity.x > 0f) {
+                entity.velocity.x = -1f
+            }
+        }
     }
 }

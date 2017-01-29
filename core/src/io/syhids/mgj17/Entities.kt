@@ -21,6 +21,9 @@ val Entity.animation: AnimationComponent
 val Entity.wigMovement: WigMovementComponent
     get() = getComponent(WigMovementComponent::class.java)
 
+val Entity.collider: ColliderComponent
+    get() = getComponent(ColliderComponent::class.java)
+
 val TRUMP_ANIMATION = Animation(
         Frame("t1.png", 1000),
         Frame("t2.png", 100),
@@ -43,11 +46,14 @@ val MEXICAN_ANIMATION = Animation(
 
 class Mexican : Entity() {
     init {
+        val scale = 0.3f
         add(VelocityComponent())
 //        add(PositionComponent(y = yAlignBottom(MEXICAN_ANIMATION.frames[0].texture, scale = 0.3f)))
         add(PositionComponent(y = -294f))
+        val tex = MEXICAN_ANIMATION.frames[0].texture
+        add(ColliderComponent(width = scale * tex.width*0.4f, height = scale * tex.height*0.4f))
         add(MexicanComponent())
-        add(SpriteComponent(scale = 0.3f))
+        add(SpriteComponent(scale = scale))
         add(MovableComponent())
         add(AnimationComponent(animation = MEXICAN_ANIMATION, speed = 8f))
     }
@@ -79,10 +85,14 @@ class TrumpRelative : Entity() {
 
 class Wig : Entity() {
     init {
+        val tex = Texture("peluca.png")
+        val scale = 0.15f
+
         add(WigMovementComponent())
         add(VelocityComponent())
+        add(ColliderComponent(width = tex.width*scale, height = tex.height*scale))
         add(PositionComponent(y = 0f))
-        add(SpriteComponent(scale = 0.15f, visible = false, img = Texture("peluca.png")))
+        add(SpriteComponent(scale = scale, visible = false, img = tex))
     }
 }
 

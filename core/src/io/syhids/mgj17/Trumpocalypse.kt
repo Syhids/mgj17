@@ -62,7 +62,9 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(MovementSystem())
         engine.addSystem(AccelerationSystem())
         engine.addSystem(AnimationSystem())
+        engine.addSystem(WigMexicanCollisionSystem())
         engine.addSystem(SpriteDrawingSystem(batch, camera))
+        engine.addSystem(GameStateSystem(batch, font))
     }
 
     private fun generateFont(): BitmapFont {

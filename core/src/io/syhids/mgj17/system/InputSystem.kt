@@ -11,7 +11,15 @@ import io.syhids.mgj17.movement
 class InputSystem : IteratingSystem(Family.all(
         MexicanComponent::class.java
 ).get()) {
+    var enabled: Boolean = true
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        if (!enabled) {
+            entity.movement.shouldMoveLeft = false
+            entity.movement.shouldMoveRight = false
+            return
+        }
+
         entity.movement.shouldMoveLeft = keyPressed(Input.Keys.LEFT)
         entity.movement.shouldMoveRight = keyPressed(Input.Keys.RIGHT)
     }

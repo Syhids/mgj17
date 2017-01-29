@@ -14,7 +14,7 @@ class PositionComponent(
         this.y = y
     }
 
-    fun set(position: PositionComponent){
+    fun set(position: PositionComponent) {
         set(position.x, position.y)
     }
 }
@@ -38,7 +38,7 @@ class TrumpRelativeComponent : Component {
 }
 
 class WigMovementComponent : Component {
-    lateinit var parent : Entity
+    lateinit var parent: Entity
     var state: WigState = WigState.Invisible
 
     sealed class WigState {
@@ -176,4 +176,15 @@ data class Frame(val imageName: String, val duration: Int) {
 class MovableComponent : Component {
     var shouldMoveRight: Boolean = false
     var shouldMoveLeft: Boolean = false
+}
+
+class ColliderComponent(
+        var width: Float = 0f,
+        var height: Float = 0f
+) : Component {
+    val midWidth: Float
+        get() = width / 2
+
+    val midHeight: Float
+        get() = height / 2
 }

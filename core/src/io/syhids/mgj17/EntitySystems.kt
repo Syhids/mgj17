@@ -1,12 +1,17 @@
 package io.syhids.mgj17
 
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import io.syhids.mgj17.WigMovementComponent.WigState
+import io.syhids.mgj17.system.InputSystem
 import java.util.*
 
 class TrumpMovementSystem : IteratingSystem(Family.all(
@@ -221,4 +226,89 @@ class TrumpRelativeShootingSystem : IteratingSystem(Family.all(
             engine.addEntity(wig)
         }
     }
+}
+
+class WigMexicanCollisionSystem : IteratingSystem(Family.all(
+        MexicanComponent::class.java
+).get()) {
+
+    fun rectangleFrom(entity: Entity): Rectangle {
+        val collider = entity.collider
+        val position = entity.position
+
+        return Rectangle(position.x, position.y, collider.width, collider.height)
+    }
+
+    override fun processEntity(entity: Entity, deltaTime: Float) {
+        val mexicanRect = rectangleFrom(entity)
+
+        engine.getEntitiesFor(Family.all(
+                WigMovementComponent::class.java
+        ).get()).forEach { wig ->
+            val wigRect = rectangleFrom(wig)
+
+            if (wigRect.overlaps(mexicanRect)) {
+                val gameStateSystem = engine.getSystem(GameStateSystem::class.java)
+                gameStateSystem.state = GameStateSystem.State.Lost
+                log("Collided")
+            }
+        }
+    }
+}
+
+class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont) : EntitySystem(1) {
+    sealed class State {
+        object Playing : State()
+        object Lost : State()
+    }
+
+    var previousState: State = State.Playing
+    var state: State = State.Playing
+
+    var accDelta: Float = 0f
+
+    override fun addedToEngine(engine: Engine?) {
+        accDelta = 0f
+    }
+
+    override fun update(deltaTime: Float) {
+        val inputSystem = engine.getSystem(InputSystem::class.java)
+
+        accDelta += deltaTime
+
+        if (previousState != state) {
+            onStateTransitioned(previousState, state)
+            previousState = state
+        }
+
+        inputSystem.enabled = state is State.Playing
+
+        when (state) {
+            State.Playing -> {
+
+            }
+            State.Lost -> {
+                batch.begin()
+                font.draw(batch, "YOU DED", 0f, 0f)
+                batch.end()
+
+                if (accDelta >= 5f) {
+                    state = State.Playing
+                }
+            }
+        }
+    }
+
+    private fun onStateTransitioned(previousState: State, newState: State) {
+        accDelta = 0f
+
+        when (newState) {
+            State.Playing -> {
+
+            }
+            State.Lost -> {
+            }
+        }
+    }
+
 }
