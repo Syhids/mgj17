@@ -13,8 +13,15 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.system.AccelerationSystem
 import io.syhids.mgj17.system.AnimationSystem
+import io.syhids.mgj17.system.GameStateSystem
 import io.syhids.mgj17.system.InputSystem
 import io.syhids.mgj17.system.MovementSystem
+import io.syhids.mgj17.system.SpriteDrawingSystem
+import io.syhids.mgj17.system.TrumpMovementSystem
+import io.syhids.mgj17.system.TrumpPhrasesSystem
+import io.syhids.mgj17.system.TrumpRelativeShootingSystem
+import io.syhids.mgj17.system.WigMexicanCollisionSystem
+import io.syhids.mgj17.system.WigMovementSystem
 
 @JvmField
 val WORLD_WIDTH = 1280
@@ -32,6 +39,7 @@ class Trumpocalypse : ApplicationAdapter() {
     var GAME_SPEED = 2f
 
     override fun create() {
+        Sounds.preload()
         font = generateFont()
 
         batch = SpriteBatch()
@@ -45,9 +53,9 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(trump)
 
         val relative1 = TrumpRelative()
-        relative1.position.x = (-WORLD_WIDTH/2 + relative1.sprite.width).toFloat()
+        relative1.position.x = (-WORLD_WIDTH / 2 + relative1.sprite.width).toFloat()
         val relative2 = TrumpRelative()
-        relative2.position.x = (WORLD_WIDTH/2 - relative2.sprite.width).toFloat()
+        relative2.position.x = (WORLD_WIDTH / 2 - relative2.sprite.width).toFloat()
 
         engine.addEntity(relative1)
         engine.addEntity(relative2)
@@ -65,6 +73,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(WigMexicanCollisionSystem())
         engine.addSystem(SpriteDrawingSystem(batch, camera))
         engine.addSystem(GameStateSystem(batch, font))
+        engine.addSystem(TrumpPhrasesSystem())
     }
 
     private fun generateFont(): BitmapFont {
@@ -93,8 +102,8 @@ class Trumpocalypse : ApplicationAdapter() {
         batch.begin()
         font.draw(batch,
                 "${time.toInt()}",
-                (WORLD_WIDTH/2).toFloat() - 8f,
-                (WORLD_HEIGHT/2).toFloat() - 8f,
+                (WORLD_WIDTH / 2).toFloat() - 8f,
+                (WORLD_HEIGHT / 2).toFloat() - 8f,
                 0f, //Target width
                 Align.topRight,
                 false
