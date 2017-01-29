@@ -2,6 +2,7 @@ package io.syhids.mgj17.system
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
+import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -47,7 +48,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
 
                     if (deportedSheet.isPlayButtonClicked(clickPos)) {
                         state = State.Playing
-                    }else if (deportedSheet.isExitButtonClicked(clickPos)) {
+                    } else if (deportedSheet.isExitButtonClicked(clickPos)) {
                         Gdx.app.exit()
                     }
                 }
@@ -64,6 +65,14 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
 
         when (newState) {
             State.Playing -> {
+                engine.getEntitiesFor(Family.all(WigMovementComponent::class.java).get()).forEach {
+                    engine.removeEntity(it)
+                }
+
+                engine.getEntitiesFor(Family.all(MexicanComponent::class.java).get()).forEach {
+                    it.position.x = 0f
+                }
+
                 deportedSheet.sprite.visible = false
                 val gameMusic = Sounds.musicGame
                 gameMusic.isLooping = true
