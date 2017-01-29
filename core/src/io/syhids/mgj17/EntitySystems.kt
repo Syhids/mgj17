@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.WigMovementComponent.WigState
 import io.syhids.mgj17.system.InputSystem
 import java.util.*
@@ -250,7 +251,6 @@ class WigMexicanCollisionSystem : IteratingSystem(Family.all(
             if (wigRect.overlaps(mexicanRect)) {
                 val gameStateSystem = engine.getSystem(GameStateSystem::class.java)
                 gameStateSystem.state = GameStateSystem.State.Lost
-                log("Collided")
             }
         }
     }
@@ -289,7 +289,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont) : EntitySyst
             }
             State.Lost -> {
                 batch.begin()
-                font.draw(batch, "YOU DED", 0f, 0f)
+                font.draw(batch, "YOU DED", 0f, 0f, 0f, Align.center, false)
                 batch.end()
 
                 if (accDelta >= 5f) {
