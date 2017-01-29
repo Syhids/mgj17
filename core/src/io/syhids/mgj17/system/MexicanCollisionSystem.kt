@@ -17,6 +17,8 @@ class MexicanCollisionSystem : IteratingSystem(Family.all(
         return Rectangle(position.x, position.y, collider.width, collider.height)
     }
 
+    val gameStateSystem by lazy { engine.getSystem(GameStateSystem::class.java) }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val mexicanRect = rectangleFrom(entity)
 
@@ -26,13 +28,14 @@ class MexicanCollisionSystem : IteratingSystem(Family.all(
             val rect = rectangleFrom(affectedEntity)
 
             if (rect.overlaps(mexicanRect)) {
-                val gameStateSystem = engine.getSystem(GameStateSystem::class.java)
-                if (affectedEntity is Wig) {
-                    engine.removeEntity(affectedEntity)
-                    gameStateSystem.state = GameStateSystem.State.Lost
-                } else {
-                    engine.removeEntity(affectedEntity)
-                    gameStateSystem.money++
+                if (gameStateSystem.state is GameStateSystem.State.Playing) {
+                    if (affectedEntity is Wig) {
+                        engine.removeEntity(affectedEntity)
+                        gameStateSystem.state = GameStateSystem.State.Lost
+                    } else {
+                        engine.removeEntity(affectedEntity)
+                        gameStateSystem.money++
+                    }
                 }
             }
         }
