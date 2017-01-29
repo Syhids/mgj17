@@ -10,11 +10,12 @@ import io.syhids.mgj17.WORLD_WIDTH
 class TimeDrawingSystem(val font: BitmapFont, val batch: SpriteBatch) : EntitySystem(1000) {
     val gameState by lazy { engine.getSystem(GameStateSystem::class.java) }
 
-    private var timeSeconds : Int = 0
+    private var timeSeconds: Int = 0
 
     override fun update(deltaTime: Float) {
-        if (gameState.state is GameStateSystem.State.Playing){
-            timeSeconds = gameState.realAccDelta.toInt()
+        when (gameState.state) {
+            GameStateSystem.State.Playing -> timeSeconds = gameState.realAccDelta.toInt()
+            GameStateSystem.State.Countdown -> timeSeconds = 0
         }
 
         batch.begin()
