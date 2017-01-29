@@ -14,7 +14,7 @@ class TimeDrawingSystem(val font: BitmapFont, val batch: SpriteBatch) : EntitySy
 
     override fun update(deltaTime: Float) {
         if (gameState.state is GameStateSystem.State.Playing){
-            timeSeconds = gameState.accDelta.toInt()
+            timeSeconds = gameState.realAccDelta.toInt()
         }
 
         batch.begin()

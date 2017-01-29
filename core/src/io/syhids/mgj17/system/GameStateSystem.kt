@@ -7,19 +7,22 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.*
 
 class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deportedSheet: DeportedSheet) : EntitySystem(1) {
     sealed class State {
         object None : State()
+        object Countdown : State()
         object Playing : State()
         object Lost : State()
     }
 
     var previousState: State = State.None
-    var state: State = State.Playing
+    var state: State = State.Countdown
 
     var accDelta: Float = 0f
+    var realAccDelta: Float = 0f
 
     override fun addedToEngine(engine: Engine?) {
         accDelta = 0f
@@ -29,6 +32,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
         val inputSystem = engine.getSystem(InputSystem::class.java)
 
         accDelta += deltaTime
+        realAccDelta += Gdx.graphics.deltaTime
 
         if (previousState != state) {
             onStateTransitioned(previousState, state)
@@ -39,7 +43,16 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
 
         when (state) {
             State.Playing -> {
+            }
+            State.Countdown -> {
+                val countdown = Math.max((4 - realAccDelta).toInt(), 0)
+                batch.begin()
+                font.draw(batch, "$countdown", 0f, 0f, 0f, Align.center, false)
+                batch.end()
 
+                if (realAccDelta > 3f) {
+                    state = State.Playing
+                }
             }
             State.Lost -> {
                 if (Gdx.input.justTouched()) {
@@ -47,33 +60,25 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                     log("Click at $clickPos")
 
                     if (deportedSheet.isPlayButtonClicked(clickPos)) {
-                        state = State.Playing
+                        state = State.Countdown
                     } else if (deportedSheet.isExitButtonClicked(clickPos)) {
                         Gdx.app.exit()
                     }
                 }
-
-//                batch.begin()
-//                font.draw(batch, "YOU DED", 0f, 0f, 0f, Align.center, false)
-//                batch.end()
             }
         }
     }
 
     private fun onStateTransitioned(previousState: State, newState: State) {
         accDelta = 0f
+        realAccDelta = 0f
 
         when (newState) {
+            State.Countdown -> {
+                resetPlayingEntitiesState()
+            }
             State.Playing -> {
-                engine.getEntitiesFor(Family.all(WigMovementComponent::class.java).get()).forEach {
-                    engine.removeEntity(it)
-                }
-
-                engine.getEntitiesFor(Family.all(MexicanComponent::class.java).get()).forEach {
-                    it.position.x = 0f
-                }
-
-                deportedSheet.sprite.visible = false
+                resetPlayingEntitiesState()
                 val gameMusic = Sounds.musicGame
                 gameMusic.isLooping = true
                 gameMusic.playMe()
@@ -87,4 +92,15 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
         }
     }
 
+    private fun resetPlayingEntitiesState() {
+        engine.getEntitiesFor(Family.all(WigMovementComponent::class.java).get()).forEach {
+            engine.removeEntity(it)
+        }
+
+        engine.getEntitiesFor(Family.all(MexicanComponent::class.java).get()).forEach {
+            it.position.x = 0f
+        }
+
+        deportedSheet.sprite.visible = false
+    }
 }
