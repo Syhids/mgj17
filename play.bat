@@ -1,1 +1,1 @@
-java -jar desktop-1.0.jar
+java -jar game.jar
