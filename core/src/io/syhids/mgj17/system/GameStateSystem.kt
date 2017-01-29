@@ -4,13 +4,15 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Align
 import io.syhids.mgj17.*
 
-class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deportedSheet: DeportedSheet) : EntitySystem(1) {
+class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deportedSheet: DeportedSheet, val camera: OrthographicCamera) : EntitySystem(1) {
     sealed class State {
         object None : State()
         object Menu : State()
@@ -57,7 +59,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
             }
             State.Lost -> {
                 if (Gdx.input.justTouched()) {
-                    val clickPos = Vector2(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
+                    val clickPos = clickPositionInGameCoords()
                     log("Click at $clickPos")
 
                     if (deportedSheet.isPlayButtonClicked(clickPos)) {
@@ -65,17 +67,13 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                         state = State.Countdown
                     } else if (deportedSheet.isExitButtonClicked(clickPos)) {
                         Sounds.buttonSound.playMe()
-                        //Fuck the exit button :(
-//                        thread(isDaemon = true) {
-//                            Thread.sleep(2000)
-                            Gdx.app.exit()
-//                        }.start()
+                        Gdx.app.exit()
                     }
                 }
             }
             State.Menu -> {
                 if (Gdx.input.justTouched()) {
-                    val clickPos = Vector2(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
+                    val clickPos = clickPositionInGameCoords()
                     log("Click at $clickPos")
 
                     if (menu.isPlayButtonClicked(clickPos)) {
@@ -83,15 +81,20 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                         state = State.Countdown
                     } else if (menu.isExitButtonClicked(clickPos)) {
                         Sounds.buttonSound.playMe()
-                        //Fuck the exit button :(
-//                        thread(isDaemon = true) {
-//                            Thread.sleep(2000)
-                            Gdx.app.exit()
-//                        }.start()
+                        Gdx.app.exit()
                     }
                 }
             }
         }
+    }
+
+    private fun clickPositionInGameCoords(): Vector2 {
+        val windowX = Gdx.input.x.toFloat()
+        val windowY = Gdx.input.y.toFloat()
+        val gamePos = camera.unproject(Vector3(windowX, windowY, 0f))
+
+        log("Window($windowX, $windowY) -> Game(${gamePos.x}, ${gamePos.y})")
+        return Vector2(gamePos.x, gamePos.y)
     }
 
     val menu by lazy { engine.getEntitiesFor(Family.all(MenuComponent::class.java).get()).first() as Menu }
@@ -101,7 +104,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
         realAccDelta = 0f
 
         when (newState) {
-            State.Menu-> {
+            State.Menu -> {
                 Sounds.musicMenu.playMe()
                 menu.sprite.visible = true
             }

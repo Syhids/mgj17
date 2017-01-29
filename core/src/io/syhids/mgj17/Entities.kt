@@ -145,11 +145,14 @@ class Menu : Entity(){
         add(SpriteComponent(img = Texture("titulo.png"), scale = 1f, visible = false, depth = 1000))
     }
 
+    val playButtonArea = Rectangle(-575f, -138f, 370f, 140f)
+    val exitButtonArea = Rectangle(-575f, -323f, 370f, 140f)
+
     fun isPlayButtonClicked(clickPos: Vector2): Boolean {
-        return true
+        return playButtonArea.contains(clickPos.add(position.x, position.y))
     }
 
     fun isExitButtonClicked(clickPos: Vector2): Boolean {
-        return false
+        return exitButtonArea.contains(clickPos.add(position.x, position.y))
     }
 }
