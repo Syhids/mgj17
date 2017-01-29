@@ -60,9 +60,15 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
                     log("Click at $clickPos")
 
                     if (deportedSheet.isPlayButtonClicked(clickPos)) {
+                        Sounds.buttonSound.playMe()
                         state = State.Countdown
                     } else if (deportedSheet.isExitButtonClicked(clickPos)) {
-                        Gdx.app.exit()
+                        Sounds.buttonSound.playMe()
+                        //Fuck the exit button :(
+//                        thread(isDaemon = true) {
+//                            Thread.sleep(2000)
+                            Gdx.app.exit()
+//                        }.start()
                     }
                 }
             }
