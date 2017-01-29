@@ -105,6 +105,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deported
 
         when (newState) {
             State.Menu -> {
+                Sounds.musicMenu.isLooping = true
                 Sounds.musicMenu.playMe()
                 menu.sprite.visible = true
             }

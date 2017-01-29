@@ -33,8 +33,14 @@ class MexicanComponent : Component {
 class TrumpComponent : Component {
 }
 
-class TrumpRelativeComponent : Component {
-    var timeLeftToShoot: Float = 1f + Math.random().toFloat()
+class CannonComponent : Component {
+    var state : State = State.Inactive
+
+    sealed class State {
+        object Inactive : State()
+        class WaitingToShoot(var timeLeft : Float) : State()
+        class AnimatingShoot(var timeLeft : Float) : State()
+    }
 }
 
 class WigMovementComponent : Component {
@@ -108,8 +114,8 @@ class AnimationComponent(
     fun updateCurrentAnimation() {
         var deltaMs = accDelta * 1000 * speed
 
-        while (deltaMs > animation.totalDuration) {
-            deltaMs -= animation.totalDuration
+        while (deltaMs > animation.totalDurationMs) {
+            deltaMs -= animation.totalDurationMs
         }
 
         animation.frames.forEachIndexed { frameIndex, frame ->
@@ -160,7 +166,7 @@ data class Animation(val frames: List<Frame>) {
         preload()
     }
 
-    val totalDuration by lazy { frames.map { it.duration }.reduce { i, i2 -> i + i2 } }
+    val totalDurationMs by lazy { frames.map { it.duration }.reduce { i, i2 -> i + i2 } }
 
     fun preload() {
         frames.forEach { it.texture }

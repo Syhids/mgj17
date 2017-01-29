@@ -43,9 +43,9 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addEntity(mexican)
         engine.addEntity(trump)
 
-        val relative1 = TrumpRelative()
+        val relative1 = Cannon()
         relative1.position.x = (-WORLD_WIDTH / 2 + relative1.sprite.width).toFloat()
-        val relative2 = TrumpRelative()
+        val relative2 = Cannon()
         relative2.position.x = (WORLD_WIDTH / 2 - relative2.sprite.width).toFloat()
 
         engine.addEntity(relative1)
@@ -60,7 +60,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())
         engine.addSystem(WigMovementSystem())
-        engine.addSystem(TrumpRelativeShootingSystem())
+        engine.addSystem(CannonShootSystem())
         engine.addSystem(MovementSystem())
         engine.addSystem(AccelerationSystem())
         engine.addSystem(AnimationSystem())
