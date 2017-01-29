@@ -12,7 +12,12 @@ class TrumpRelativeShootingSystem : IteratingSystem(Family.all(
         TrumpRelativeComponent::class.java
 ).get()) {
 
+    val gameState by lazy { engine.getSystem(GameStateSystem::class.java) }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        if (gameState.state is GameStateSystem.State.Countdown)
+            return
+
         val trumpRelative = entity.getComponent(TrumpRelativeComponent::class.java)
 
         trumpRelative.timeLeftToShoot -= deltaTime

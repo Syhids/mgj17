@@ -24,12 +24,14 @@ class Trumpocalypse : ApplicationAdapter() {
     lateinit var trump: Trump
     lateinit var camera: OrthographicCamera
     lateinit var font: BitmapFont
+    lateinit var bigFont: BitmapFont
 
     var GAME_SPEED = 2f
 
     override fun create() {
         Sounds.preload()
-        font = generateFont()
+        font = generateFont(56)
+        bigFont = generateFont(128)
 
         batch = SpriteBatch()
 
@@ -63,15 +65,15 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(AnimationSystem())
         engine.addSystem(WigMexicanCollisionSystem())
         engine.addSystem(SpriteDrawingSystem(batch, camera))
-        engine.addSystem(GameStateSystem(batch, font, deportedSheet))
+        engine.addSystem(GameStateSystem(batch, bigFont, deportedSheet))
         engine.addSystem(TrumpPhrasesSystem())
         engine.addSystem(TimeDrawingSystem(font, batch))
     }
 
-    private fun generateFont(): BitmapFont {
+    private fun generateFont(size: Int): BitmapFont {
         val generator = FreeTypeFontGenerator(Gdx.files.internal("ALIN_KID.ttf"))
         val parameter = FreeTypeFontParameter()
-        parameter.size = 56
+        parameter.size = size
         parameter.color = Color.WHITE
         parameter.borderColor = Color.BLACK
         parameter.borderWidth = 3f

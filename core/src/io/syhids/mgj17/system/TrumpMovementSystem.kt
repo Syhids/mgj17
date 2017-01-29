@@ -15,6 +15,8 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
 
     var state: State = State.IdlingFor(ms = 2000)
 
+    val gameState by lazy { engine.getSystem(GameStateSystem::class.java) }
+
     sealed class State {
         class MovingTo(val x: Float) : State()
         class IdlingFor(val ms: Int, var mustShootAtStart: Boolean = true) : State() {
@@ -29,6 +31,11 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        if (gameState.state is GameStateSystem.State.Countdown) {
+            entity.velocity.x *= 0.86f
+            return
+        }
+
         accDelta += deltaTime
 
         val curState = state
