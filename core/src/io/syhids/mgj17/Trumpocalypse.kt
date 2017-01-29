@@ -11,17 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter
 import com.badlogic.gdx.utils.Align
-import io.syhids.mgj17.system.AccelerationSystem
-import io.syhids.mgj17.system.AnimationSystem
-import io.syhids.mgj17.system.GameStateSystem
-import io.syhids.mgj17.system.InputSystem
-import io.syhids.mgj17.system.MovementSystem
-import io.syhids.mgj17.system.SpriteDrawingSystem
-import io.syhids.mgj17.system.TrumpMovementSystem
-import io.syhids.mgj17.system.TrumpPhrasesSystem
-import io.syhids.mgj17.system.TrumpRelativeShootingSystem
-import io.syhids.mgj17.system.WigMexicanCollisionSystem
-import io.syhids.mgj17.system.WigMovementSystem
+import io.syhids.mgj17.system.*
 
 @JvmField
 val WORLD_WIDTH = 1280
@@ -62,6 +52,8 @@ class Trumpocalypse : ApplicationAdapter() {
 
         engine.addEntity(Wall())
         engine.addEntity(Background())
+        val deportedSheet = DeportedSheet()
+        engine.addEntity(deportedSheet)
 
         engine.addSystem(InputSystem())
         engine.addSystem(TrumpMovementSystem())
@@ -72,7 +64,7 @@ class Trumpocalypse : ApplicationAdapter() {
         engine.addSystem(AnimationSystem())
         engine.addSystem(WigMexicanCollisionSystem())
         engine.addSystem(SpriteDrawingSystem(batch, camera))
-        engine.addSystem(GameStateSystem(batch, font))
+        engine.addSystem(GameStateSystem(batch, font, deportedSheet))
         engine.addSystem(TrumpPhrasesSystem())
     }
 

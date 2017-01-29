@@ -2,13 +2,13 @@ package io.syhids.mgj17.system
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntitySystem
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.utils.Align
-import io.syhids.mgj17.Sounds
-import io.syhids.mgj17.playMe
+import com.badlogic.gdx.math.Vector2
+import io.syhids.mgj17.*
 
-class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont) : EntitySystem(1) {
+class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val deportedSheet: DeportedSheet) : EntitySystem(1) {
     sealed class State {
         object None : State()
         object Playing : State()
@@ -41,13 +41,20 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont) : EntitySyst
 
             }
             State.Lost -> {
-                batch.begin()
-                font.draw(batch, "YOU DED", 0f, 0f, 0f, Align.center, false)
-                batch.end()
+                if (Gdx.input.justTouched()) {
+                    val clickPos = Vector2(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
+                    log("Click at $clickPos")
 
-                if (accDelta >= 5f) {
-                    state = State.Playing
+                    if (deportedSheet.isPlayButtonClicked(clickPos)) {
+                        state = State.Playing
+                    }else if (deportedSheet.isExitButtonClicked(clickPos)) {
+                        Gdx.app.exit()
+                    }
                 }
+
+//                batch.begin()
+//                font.draw(batch, "YOU DED", 0f, 0f, 0f, Align.center, false)
+//                batch.end()
             }
         }
     }
@@ -57,11 +64,13 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont) : EntitySyst
 
         when (newState) {
             State.Playing -> {
+                deportedSheet.sprite.visible = false
                 val gameMusic = Sounds.musicGame
                 gameMusic.isLooping = true
                 gameMusic.playMe()
             }
             State.Lost -> {
+                deportedSheet.sprite.visible = true
                 Sounds.musicGame.stop()
                 val deathMusic = Sounds.musicDeath
                 deathMusic.playMe()

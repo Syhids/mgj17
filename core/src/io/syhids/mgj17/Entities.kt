@@ -2,6 +2,8 @@ package io.syhids.mgj17
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 
 val Entity.position: PositionComponent
     get() = getComponent(PositionComponent::class.java)
@@ -113,5 +115,23 @@ class Background : Entity() {
         val texture = Texture("background.png")
         add(PositionComponent(y = yAlignBottom(texture) + 115f))
         add(SpriteComponent(img = texture, depth = -2))
+    }
+}
+
+class DeportedSheet : Entity() {
+    init {
+        add(PositionComponent())
+        add(SpriteComponent(img = Texture("Muerte.png"), scale = 0.5f, visible = false, depth = 10))
+    }
+
+    val playButtonArea = Rectangle(1040f, 962f, 320f, 300f)
+    val exitButtonArea = Rectangle(1402f, 962f, 320f, 300f)
+
+    fun isPlayButtonClicked(clickPos: Vector2): Boolean {
+        return playButtonArea.contains(clickPos.add(position.x, position.y))
+    }
+
+    fun isExitButtonClicked(clickPos: Vector2): Boolean {
+        return exitButtonArea.contains(clickPos.add(position.x, position.y))
     }
 }
