@@ -142,7 +142,7 @@ class DeportedSheet : Entity() {
 class Menu : Entity(){
     init {
         add(MenuComponent())
-        add(PositionComponent())
+        add(PositionComponent(y = 26f))
         add(SpriteComponent(img = Texture("titulo.png"), scale = 1f, visible = false, depth = 1000))
     }
 
