@@ -16,6 +16,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
     var state: State = State.IdlingFor(ms = 2000)
 
     val gameState by lazy { engine.getSystem(GameStateSystem::class.java) }
+    val mexican by lazy { engine.getEntitiesFor(Family.all(MexicanComponent::class.java).get()).first() }
 
     sealed class State {
         class MovingTo(val x: Float) : State()
@@ -75,15 +76,20 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
         }
     }
 
-    private fun findRandomXInsideWorld(entity: Entity): Float {
+    private fun findRandomXInsideWorld(trump: Entity): Float {
         var finalTargetPosX: Float
 
         val leftBounds = -WORLD_WIDTH / 3
         val rightBounds = WORLD_WIDTH / 3
 
         do {
-            val delta = (Math.random() * 800 - 400).toInt()
-            finalTargetPosX = entity.position.x + delta
+            var delta = (100f + Math.random() * 400).toInt()
+
+            if (mexican.position.x < trump.position.x) {
+                delta *= -1
+            }
+
+            finalTargetPosX = trump.position.x + delta
         } while (finalTargetPosX < leftBounds || finalTargetPosX > rightBounds)
 
         return finalTargetPosX
