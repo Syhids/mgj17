@@ -81,6 +81,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
 
         val leftBounds = -WORLD_WIDTH / 3
         val rightBounds = WORLD_WIDTH / 3
+        var exitLoopIn = 10
 
         do {
             var delta = (100f + Math.random() * 400).toInt()
@@ -90,6 +91,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
             }
 
             finalTargetPosX = trump.position.x + delta
+            exitLoopIn--
+
+            if (exitLoopIn <= 0)
+                break
         } while (finalTargetPosX < leftBounds || finalTargetPosX > rightBounds)
 
         return finalTargetPosX
