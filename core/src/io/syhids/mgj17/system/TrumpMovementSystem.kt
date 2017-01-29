@@ -31,6 +31,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
         }
     }
 
+    fun reset(){
+        accDelta = 0f
+    }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
 
         when (gameState.state) {
@@ -57,7 +61,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                 }
 
                 if (Math.abs(Math.abs(entity.position.x) - Math.abs(curState.x)) < 10) {
-                    val fixed = 2200 - Math.min(1200f, difficuty * 200f)
+                    val fixed = 2400 - Math.min(1200f, difficuty * 200f)
                     val variable = Random().nextInt(5000 - Math.min(4999f, difficuty * 450f).toInt())
 
                     state = State.IdlingFor(ms = (fixed + variable).toInt())

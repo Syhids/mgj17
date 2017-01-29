@@ -29,6 +29,8 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val bigFont:
 
     var money: Int = 0
 
+    val trumpMovementSystem by lazy { engine.getSystem(TrumpMovementSystem::class.java) }
+
     override fun addedToEngine(engine: Engine?) {
         accDelta = 0f
     }
@@ -95,7 +97,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val bigFont:
 
     private fun drawMoney() {
         batch.begin()
-        font.draw(batch, "${money * 100}", -WORLD_WIDTH / 2 + 8f, WORLD_HEIGHT / 2 - 8f, 0f, Align.topLeft, false)
+        font.draw(batch, "$${money * 100}", -WORLD_WIDTH / 2 + 8f, WORLD_HEIGHT / 2 - 8f, 0f, Align.topLeft, false)
         batch.end()
     }
 
@@ -126,6 +128,7 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val bigFont:
                 resetPlayingEntitiesState()
             }
             State.Playing -> {
+                trumpMovementSystem.reset()
                 resetPlayingEntitiesState()
                 val gameMusic = Sounds.musicGame
                 gameMusic.isLooping = true
