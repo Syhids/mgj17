@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import io.syhids.mgj17.PositionComponent
+import io.syhids.mgj17.SpriteComponent
 import io.syhids.mgj17.component
 import io.syhids.mgj17.sprite
 

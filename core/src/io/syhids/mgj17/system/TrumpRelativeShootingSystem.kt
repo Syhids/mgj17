@@ -3,6 +3,7 @@ package io.syhids.mgj17.system
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import io.syhids.mgj17.TrumpRelativeComponent
 import io.syhids.mgj17.Wig
 import io.syhids.mgj17.position
 import io.syhids.mgj17.wigMovement
