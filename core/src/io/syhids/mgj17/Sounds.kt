@@ -30,18 +30,19 @@ object Sounds {
 
     private fun createSound(path: String) = Gdx.audio.newSound(asset(path))
 
-    val musicStart by lazy { Gdx.audio.newMusic(asset("inicio.mp3")) }
+    val musicMenu by lazy { Gdx.audio.newMusic(asset("inicio.mp3")) }
     val musicDeath by lazy { Gdx.audio.newMusic(asset("muerte.mp3")) }
     val musicGame by lazy { Gdx.audio.newMusic(asset("juego.mp3")) }
+    val buttonSound by lazy { Gdx.audio.newSound(asset("Boton.mp3")) }
 
     private fun asset(assetFile: String) = Gdx.files.internal(assetFile)
 
     fun preload() {
         (0..7).forEach { index -> phrase(index) }
 
-        createSound("inicio.mp3")
-        createSound("juego.mp3")
-        createSound("muerte.mp3")
-        createSound("Boton.mp3")
+        musicMenu
+        musicGame
+        musicDeath
+        buttonSound
     }
 }
