@@ -64,9 +64,9 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                     entity.velocity.x -= moveStep
                 }
 
-                if (Math.abs(Math.abs(entity.position.x) - Math.abs(curState.x)) < 10) {
-                    val fixed = 2400 - Math.min(1200f, difficuty * 200f)
-                    val variable = Random().nextInt(5000 - Math.min(4999f, difficuty * 450f).toInt())
+                if (Math.abs(Math.abs(entity.position.x) - Math.abs(curState.x)) < 24) {
+                    val fixed = 2400 - Math.min(1500f, difficuty * 50f)
+                    val variable = Random().nextInt(5000 - Math.min(4400f, difficuty * 50f).toInt())
 
                     state = State.IdlingFor(ms = (fixed + variable).toInt())
                 }
@@ -89,7 +89,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                     state = State.MovingTo(finalTargetPosX)
                 }
 
-                entity.velocity.x *= 0.88f
+                entity.velocity.x *= 0.88f - Math.min(0.50f, difficuty * 0.01f)
             }
         }
     }

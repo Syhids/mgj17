@@ -8,6 +8,9 @@ import io.syhids.mgj17.*
 class ThrowableMovementSystem : IteratingSystem(Family.all(
         ThrowableComponent::class.java
 ).get()) {
+
+    private val trumpMovement by lazy { engine.getSystem(TrumpMovementSystem::class.java) }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val parent = entity.throwable.parent
         val curState = entity.throwable.state
@@ -27,6 +30,15 @@ class ThrowableMovementSystem : IteratingSystem(Family.all(
                 entity.sprite.visible = false
             }
             ThrowableComponent.WigState.InTrumpsHands -> {
+
+                if (parent is Trump && trumpMovement.state is TrumpMovementSystem.State.MovingTo) {
+                    entity.throwable.state = ThrowableComponent.WigState.Falling
+                    entity.velocity.y = -INITIAL_VELOCITY
+                    entity.sprite.visible = true
+                    entity.sprite.alpha = 1f
+                    return
+                }
+
                 val frameIndex = parent.animation.currentAnimationIndex
 
                 entity.sprite.visible = frameIndex != 0
@@ -49,7 +61,7 @@ class ThrowableMovementSystem : IteratingSystem(Family.all(
                 }
             }
             ThrowableComponent.WigState.Falling -> {
-                entity.sprite.rotation += deltaTime*180
+                entity.sprite.rotation += deltaTime * 180
 
                 entity.sprite.visible = true
                 entity.sprite.alpha = 1f
