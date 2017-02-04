@@ -127,6 +127,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
 
         if (trumpAnim.state !is AnimationComponent.State.PlayUntilFrame) {
             trumpAnim.reset()
+            trumpAnim.speed += 0.1f
             trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
         }
         val wig = Wig()

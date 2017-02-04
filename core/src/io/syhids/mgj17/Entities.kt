@@ -78,6 +78,10 @@ class Trump : Entity() {
         animationComponent.state = AnimationComponent.State.Paused
         add(animationComponent)
     }
+
+    fun reset() {
+        animation.speed = 1.5f
+    }
 }
 
 class Cannon : Entity() {

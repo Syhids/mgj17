@@ -153,6 +153,10 @@ class GameStateSystem(val batch: SpriteBatch, val font: BitmapFont, val bigFont:
             it.position.x = 0f
         }
 
+        engine.getEntitiesFor(Family.all(TrumpComponent::class.java).get()).forEach {
+            (it as Trump).reset()
+        }
+
         deportedSheet.sprite.visible = false
     }
 }
