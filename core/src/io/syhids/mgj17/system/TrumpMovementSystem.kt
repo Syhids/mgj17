@@ -42,6 +42,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                 entity.velocity.x *= 0.86f
                 return
             }
+            is GameStateSystem.State.Lost -> {
+                entity.velocity.x *= 0.86f
+                return
+            }
             is GameStateSystem.State.Menu -> {
                 return
             }
