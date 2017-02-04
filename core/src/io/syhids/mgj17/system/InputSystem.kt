@@ -4,10 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Input.Keys
-import io.syhids.mgj17.MexicanComponent
-import io.syhids.mgj17.keyJustPressed
-import io.syhids.mgj17.keyPressed
-import io.syhids.mgj17.movement
+import io.syhids.mgj17.*
 
 class InputSystem : IteratingSystem(Family.all(
         MexicanComponent::class.java
@@ -26,6 +23,10 @@ class InputSystem : IteratingSystem(Family.all(
 
         if (keyJustPressed(Keys.LEFT) || keyJustPressed(Keys.RIGHT)) {
             //TODO: Play press button sound?
+        }
+
+        if (keyJustPressed(Keys.M)) {
+            Sounds.MUTED = Sounds.MUTED.not()
         }
     }
 }

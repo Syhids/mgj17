@@ -3,6 +3,7 @@ package io.syhids.mgj17
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
+import io.syhids.mgj17.Sounds.MUTED
 import io.syhids.mgj17.Sounds.VOLUME
 import java.util.*
 
@@ -12,7 +13,10 @@ fun Sound.playMe() {
 
 fun Music.playMe() {
     volume = VOLUME
-    play()
+    if (MUTED) volume = 0f
+    if (!isPlaying) {
+        play()
+    }
 }
 
 object Sounds {
@@ -45,4 +49,12 @@ object Sounds {
         musicDeath
         buttonSound
     }
+
+    private val allMusic by lazy { listOf(musicMenu, musicGame, musicDeath) }
+
+    var MUTED: Boolean = false
+        set(value) {
+            field = value
+            allMusic.forEach { if (it.isPlaying) musicGame.playMe() }
+        }
 }
