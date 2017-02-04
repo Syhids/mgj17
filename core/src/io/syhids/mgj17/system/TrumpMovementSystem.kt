@@ -31,7 +31,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
         }
     }
 
-    fun reset(){
+    fun reset() {
         accDelta = 0f
     }
 
@@ -121,8 +121,10 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
     private fun shootWig(entity: Entity) {
         val trumpAnim = entity.animation
 
-        trumpAnim.reset()
-        trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
+        if (trumpAnim.state !is AnimationComponent.State.PlayUntilFrame) {
+            trumpAnim.reset()
+            trumpAnim.state = AnimationComponent.State.PlayUntilFrame(0)
+        }
         val wig = Wig()
         wig.throwable.parent = entity
         wig.position.set(entity.position)
