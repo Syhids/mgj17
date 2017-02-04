@@ -56,7 +56,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
         val curState = state
         when (curState) {
             is State.MovingTo -> {
-                val moveStep = deltaTime * 1f + Math.min(difficuty * 0.3f, 60f)
+                val moveStep = deltaTime * (18f + Math.min(difficuty*difficuty/4, 1000f))
 
                 if (entity.position.x < curState.x) {
                     entity.velocity.x += moveStep
@@ -75,10 +75,14 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                 if (curState.mustShootAtStart) {
                     curState.mustShootAtStart = false
 
-                    if (Math.random() > 0.15f) {
+                    val rnd = Math.random()
+                    if (rnd < 0.1f) {
                         shootWig(entity)
-                    } else {
                         shootMoney(entity)
+                    } else if (rnd < 0.25f) {
+                        shootMoney(entity)
+                    } else {
+                        shootWig(entity)
                     }
                 }
 
