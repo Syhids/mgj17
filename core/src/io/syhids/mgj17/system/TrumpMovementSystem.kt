@@ -93,7 +93,7 @@ class TrumpMovementSystem : IteratingSystem(Family.all(
                     state = State.MovingTo(finalTargetPosX)
                 }
 
-                entity.velocity.x *= 0.88f - Math.min(0.50f, difficuty * 0.01f)
+                entity.velocity.x *= 0.92f - Math.min(0.15f, difficuty * 0.0015f)
             }
         }
     }
